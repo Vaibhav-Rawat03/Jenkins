@@ -1,5 +1,7 @@
 def call(String s3Prefix, String lastProjectHashEnv, String lastJavaUtilsHashEnv) {
     script {
+
+echo "DOinggg first....................."
         env.S3_FILE_NAME = sh(
             script: """
                 aws s3api list-objects \
@@ -22,6 +24,7 @@ def call(String s3Prefix, String lastProjectHashEnv, String lastJavaUtilsHashEnv
             returnStdout: true
         ).trim()
         
+echo "DOinggg....................."
         def matches = env.S3_FILE_NAME =~ /.*_([a-f0-9]{40})_([a-f0-9]{40})\.jar$/
         if (matches) {
             env."${lastProjectHashEnv}" = matches[0][1]
