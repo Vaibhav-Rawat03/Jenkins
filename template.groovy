@@ -55,7 +55,8 @@ def checkForUpdates(String projectDir, String lastProjectHashEnv, String current
             echo "Continue to build"
         }
 
-return this
         echo "${projectDir} is going to be built: ${env.UPDATE}"
     }
 }
+
+return this
