@@ -15,12 +15,37 @@ pipeline {
         stage('Use the template') {
             steps {
                 script{
-                    def s3FetchTemplate = load 'template.groovy'
+                   // def s3FetchTemplate = load 'template.groovy'
                     
-                    s3FetchTemplate.call(
-                        s3Prefix: "jenkins_backups",
-                        firstHash: "LAST_AUTHSERVER_HASH",
-                        secondHash: "LAST_JAVA_UTILS_HASH"
+                   // s3FetchTemplate.call(
+                   //     s3Prefix: "jenkins_backups",
+                   //     firstHash: "LAST_AUTHSERVER_HASH",
+                   //     secondHash: "LAST_JAVA_UTILS_HASH"
+
+                        echo "DOinggg first....................."
+        env.S3_FILE_NAME = sh(
+            script: """
+                aws s3api list-objects \
+                    --bucket jenkinsupdate-test-bucket \
+                    --prefix "${s3Prefix}" \
+                    --query "Contents | sort_by(@, &LastModified) | [-1]" \
+                    --output json | jq -r '.Key' | sed 's/jenkins_backups\\///'
+            """,
+            returnStdout: true
+        ).trim()
+        
+        env.S3_LAST_MODIFIED = sh(
+            script: """
+                aws s3api list-objects \
+                    --bucket jenkinsupdate-test-bucket \
+                    --prefix "${s3Prefix}" \
+                    --query "Contents | sort_by(@, &LastModified) | [-1]" \
+                    --output json | jq -r '.LastModified'
+            """,
+            returnStdout: true
+        ).trim()
+        
+echo "DOinggg....................."
                     )
                 }
             }
