@@ -5,7 +5,9 @@ pipeline {
         stage('Clone'){
             steps{
                 script{
+                sh '''
                 ls-la
+                '''
                         
     }
 }
