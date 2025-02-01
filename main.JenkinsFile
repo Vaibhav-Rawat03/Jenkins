@@ -6,7 +6,7 @@ pipeline {
                 script {
                     def s3FetchTemplate = load 'template.groovy'
                     
-                    s3FetchTemplate.fetchLatestJarFromS3(
+                    s3FetchTemplate.call(
                         s3Prefix: "jenkins_backups",
                         envVars: [
                             firstHash: "LAST_AUTHSERVER_HASH",
