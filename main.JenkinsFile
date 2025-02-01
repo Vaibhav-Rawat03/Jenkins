@@ -24,18 +24,7 @@ pipeline {
                         "LAST_JAVA_UTILS_HASH"     // lastJavaUtilsHashEnv
                     )
                     
-                    // Call checkForUpdates
-                    template.checkForUpdates(
-                        "background-jobs",         // projectDir
-                        "LAST_PROJECT_HASH",       // lastProjectHashEnv
-                        "CURRENT_PROJECT_HASH"     // currentProjectHashEnv
-                    )
-                    
-                    template.checkForUpdates(
-                        "java-utils",              // projectDir
-                        "LAST_JAVA_UTILS_HASH",    // lastProjectHashEnv
-                        "CURRENT_JAVA_UTILS_HASH"  // currentProjectHashEnv
-                    )
+                    echo "Done ji"
                 }
             }
         }
