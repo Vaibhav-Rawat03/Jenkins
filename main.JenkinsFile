@@ -11,43 +11,31 @@ pipeline {
             }
         }
 
-        stage('Use the template') {
+         stage('Use the template') {
             steps {
                 script {
-                    echo "Doing first..."
+                    // Load the template
+                    def template = load 'template.groovy'
                     
-                    // Set the s3Prefix variable (assuming you want to define it somewhere)
-                    def s3Prefix = "jenkins_backups"  // Define this or pass it dynamically
+                    // Call the methods
+                    template.call(
+                        "jenkins_backups",         // s3Prefix
+                        "LAST_PROJECT_HASH",       // lastProjectHashEnv
+                        "LAST_JAVA_UTILS_HASH"     // lastJavaUtilsHashEnv
+                    )
                     
-                    // Run AWS CLI commands and capture the output in environment variables
-                    env.S3_FILE_NAME = sh(
-                        script: """
-                            aws s3api list-objects \
-                                --bucket jenkinsupdate-test-bucket \
-                                --prefix "${s3Prefix}" \
-                                --query "Contents | sort_by(@, &LastModified) | [-1]" \
-                                --output json | jq -r '.Key' | sed 's/jenkins_backups\\///'
-                        """,
-                        returnStdout: true
-                    ).trim()
+                    // Call checkForUpdates
+                    template.checkForUpdates(
+                        "background-jobs",         // projectDir
+                        "LAST_PROJECT_HASH",       // lastProjectHashEnv
+                        "CURRENT_PROJECT_HASH"     // currentProjectHashEnv
+                    )
                     
-                    echo "File Name: ${env.S3_FILE_NAME}"
-
-                    env.S3_LAST_MODIFIED = sh(
-                        script: """
-                            aws s3api list-objects \
-                                --bucket jenkinsupdate-test-bucket \
-                                --prefix "${s3Prefix}" \
-                                --query "Contents | sort_by(@, &LastModified) | [-1]" \
-                                --output json | jq -r '.LastModified'
-                        """,
-                        returnStdout: true
-                    ).trim()
-                    
-                    echo "Last Modified: ${env.S3_LAST_MODIFIED}"
-
-                    // You can continue your logic here
-                    echo "Completed fetching the S3 object details"
+                    template.checkForUpdates(
+                        "java-utils",              // projectDir
+                        "LAST_JAVA_UTILS_HASH",    // lastProjectHashEnv
+                        "CURRENT_JAVA_UTILS_HASH"  // currentProjectHashEnv
+                    )
                 }
             }
         }
