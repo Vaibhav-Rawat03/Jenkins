@@ -4,14 +4,13 @@ pipeline {
         stage('Use the template') {
             steps {
                 script {
+                    echo "Running....................................."
                     def s3FetchTemplate = load 'template.groovy'
                     
                     s3FetchTemplate.call(
                         s3Prefix: "jenkins_backups",
-                        envVars: [
-                            firstHash: "LAST_AUTHSERVER_HASH",
-                            secondHash: "LAST_JAVA_UTILS_HASH"
-                        ]
+                        firstHash: "LAST_AUTHSERVER_HASH",
+                        secondHash: "LAST_JAVA_UTILS_HASH"
                     )
                 }
             }
