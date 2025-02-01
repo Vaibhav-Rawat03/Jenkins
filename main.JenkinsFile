@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Use the template') {
             steps {
-                
+                script{
                     def s3FetchTemplate = load 'template.groovy'
                     
                     s3FetchTemplate.call(
@@ -11,7 +11,7 @@ pipeline {
                         firstHash: "LAST_AUTHSERVER_HASH",
                         secondHash: "LAST_JAVA_UTILS_HASH"
                     )
-                
+                }
             }
         }
     }
