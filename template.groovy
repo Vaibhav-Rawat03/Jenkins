@@ -32,6 +32,7 @@ echo "DOinggg....................."
         } else {
             error("Filename format did not match expected pattern.")
         }
+echo "${env[lastProjectHashEnv]}" 
     }
 }
 
