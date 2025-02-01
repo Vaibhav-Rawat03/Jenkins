@@ -1,20 +1,20 @@
-pipeline{
-  agent any
-  stages{
-    stage('Use the template'){
-      steps{
-        def s3FetchTemplate = load 'template.groovy'
-      
-        s3FetchTemplate.fetchLatestJarFromS3(
-                    s3Prefix: "jenkins_backups",
-                    envVars: [
-                      firstHash: "LAST_AUTHSERVER_HASH",
-                      secondHash: "LAST_JAVA_UTILS_HASH"
-                    ]
-        )
-      }
-      
-      
+pipeline {
+    agent any
+    stages {
+        stage('Use the template') {
+            steps {
+                script {
+                    def s3FetchTemplate = load 'template.groovy'
+                    
+                    s3FetchTemplate.fetchLatestJarFromS3(
+                        s3Prefix: "jenkins_backups",
+                        envVars: [
+                            firstHash: "LAST_AUTHSERVER_HASH",
+                            secondHash: "LAST_JAVA_UTILS_HASH"
+                        ]
+                    )
+                }
+            }
+        }
     }
-  }
 }
